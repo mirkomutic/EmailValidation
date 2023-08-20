@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Contains custom metadata for streamlining email workflows in any sobject. One metadata record contains specifications about the SObject Type, what status picklist to use, and which email template is required to proceed in the mapped stage.</description>
+    <label>Email Validation Parameter</label>
+    <pluralLabel>Email Validation Parameters</pluralLabel>
+    <visibility>Public</visibility>
+</CustomObject>

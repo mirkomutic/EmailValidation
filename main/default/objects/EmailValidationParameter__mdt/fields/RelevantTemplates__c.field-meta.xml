@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>RelevantTemplates__c</fullName>
+    <description>Comma-separated list of relevant E-Mail Templates for any given stage. Use Developer Name of Email Template record.</description>
+    <externalId>false</externalId>
+    <fieldManageability>DeveloperControlled</fieldManageability>
+    <inlineHelpText>Comma-separated list of relevant E-Mail Templates for any given stage. Use Developer Name of Email Template record.</inlineHelpText>
+    <label>Relevant Templates</label>
+    <length>255</length>
+    <required>false</required>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>
