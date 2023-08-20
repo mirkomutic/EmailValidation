@@ -21,3 +21,6 @@ Order: 1
 This is a first draft and probably requires some code refactoring and has potential to be a bit simpler in terms of Metadata configuration. If you have questions regarding the current capability or functionality, feel free to reach out to me on LinkedIn.
 
 I hope you can use and improve this code!
+
+Currently out of scope:
+-Validation for Lead/Contact or other objects that are not supporetd by the 'RelatedTo' polymorphic lookup on the EmailMessage object. You can probably make it work by simply creating a custom lookup from EmailMessage to your desired object and then replace the 'RelatedToId' field in the Email Message query of the apex class
