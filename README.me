@@ -2,14 +2,7 @@ The 'EmailValidation' class is going to let you dynamically add required email t
 
 In my example you see that I configured the Opportunity Path (standard StageName) to require a specific Email Template before completing the first stage.
 
-Two Metadata-Objects are in place to configure the generic apex class. The first is 'ObjectStatusMappings__mdt'. Create a record for an object and name it just like the object API name (in my case 'Opportunity'). In StatusField__c, add the relevant picklist field API name that your path is based on (Stage Name). The apex class will access the picklist values dynamically for the configured picklist.
-
-Example:
-Object Status Mapping Name: "Opportunity"
-Label: "Opportunity"
-StatusField: "StageName"
-
-The second configurable object is 'EmailValidationParameter__mdt'. Create a record for each picklist value and specify the exact picklist value, the template that is required to complete the stage (developer name), the error message that should appear when users try to proceed without sending it, and the order of that value in the whole process.
+The mapping between a stage and it's required templates is done in 'EmailValidationParameter__mdt'. Create a record for each picklist value and specify the exact picklist value, the template that is required to complete the stage (developer name), the error message that should appear when users try to proceed without sending it, and the order of that value in the whole process.
 
 Example:
 Label: "Prospecting"
@@ -17,6 +10,14 @@ Email Validation Parameter Name: "Prospecting"
 Relevant Templates: "Welcome_Mail_1692446428098"
 Error Message: "Please send a Welcome-Email to the primary contact before proceeding."
 Order: 1
+
+If you require more than one template per stage, simply store them comma separated (no spaces). The method in this class needs to be called by a Trigger or Trigger handler, passing a map of new objects, old objects, and the picklist api name that is used for the process.
+
+Example (Opportunity Trigger):
+
+trigger OpportunityTrigger on Opportunity (before update) {
+	EmailValidation.processEmailValidation(Trigger.newMap, Trigger.oldMap, 'StageName');
+}
 
 This is a first draft and probably requires some code refactoring and has potential to be a bit simpler in terms of Metadata configuration. If you have questions regarding the current capability or functionality, feel free to reach out to me on LinkedIn.
 
