@@ -51,14 +51,14 @@ public class EmailValidation_Test {
 
     @isTest
     static void processEmailValidation_Test(){
-        EmailTemplate testTemplate = [SELECT Id FROM EmailTemplate WHERE Name = 'TestTemplateForProjectProcess'];
+        EmailTemplate testTemplate = [SELECT Id FROM EmailTemplate WHERE Name = 'TestTemplateForOppProcess'];
         EmailMessage testMessage = [SELECT Id, RelatedToId FROM EmailMessage LIMIT 1];
         List<Opportunity> testOpps = [SELECT Id, StageName FROM Opportunity ORDER BY Name DESC];
-        Map<Id, Opportunity> oldMapProjects = new Map<Id,Opportunity>{testOpps[1].Id => testOpps[0]};
-        Map<Id, Opportunity> newMapProjects = new Map<Id,Opportunity>{testOpps[1].Id => testOpps[1]};
+        Map<Id, Opportunity> oldMapOpps = new Map<Id,Opportunity>{testOpps[1].Id => testOpps[0]};
+        Map<Id, Opportunity> newMapOpps = new Map<Id,Opportunity>{testOpps[1].Id => testOpps[1]};
 
         Test.startTest();
-        EmailValidation.processEmailValidation(newMapProjects, oldMapProjects);
+        EmailValidation.processEmailValidation(newMapOpps, oldMapOpps, 'StageName');
         Test.stopTest();
 
         Assert.areEqual(EmailValidationParameter__mdt.getInstance(testOpps[0].StageName).ErrorMessage__c, testOpps[1].getErrors()[0].getMessage());
