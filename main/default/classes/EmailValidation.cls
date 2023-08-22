@@ -6,7 +6,7 @@ public class EmailValidation {
     //1. Query all related email messages and create a map of the TemplateDeveloperName that was used and the EmailMessage record
     //2. Compare the required EmailTemplates for each status by looking for the template developer name of the template in map
 
-    public static void processEmailValidation(Map<Id, SObject> newMapRecords, Map<Id, SObject> oldMapRecords){
+    public static void processEmailValidation(Map<Id, SObject> newMapRecords, Map<Id, SObject> oldMapRecords, String statusField){
         //Query related Email Message records for projects in Trigger.new
         List<EmailMessage> emailList = [SELECT Id, EmailTemplate.DeveloperName, RelatedToId FROM EmailMessage WHERE RelatedToId IN :newMapRecords.keySet() AND EmailTemplateId != NULL];
 
@@ -26,13 +26,11 @@ public class EmailValidation {
         for(SObject record : newMapRecords.values()){
             //get sobject type and status field name from custom mdt
             String sobjectType = record.getSObjectType().getDescribe().getName();
-            if(ObjectStatusMappings__mdt.getInstance(sobjectType) != null){
-                String statusField = ObjectStatusMappings__mdt.getInstance(sobjectType).StatusField__c;
-
+                
                 //create variable for old and new picklist status value
                 String newStatus = (String) record.get(statusField);
                 String oldStatus = (String) oldMapRecords.get(record.Id).get(statusField);
-
+                
                 // Compare the order of the statuses to determine if status has progressed                
                 Decimal oldStatusOrder = EmailValidationParameter__mdt.getInstance(oldStatus) != null ? EmailValidationParameter__mdt.getInstance(oldStatus).Order__c : 0;
                 Decimal newStatusOrder = EmailValidationParameter__mdt.getInstance(newStatus) != null ? EmailValidationParameter__mdt.getInstance(newStatus).Order__c : 0;
@@ -41,7 +39,7 @@ public class EmailValidation {
                 //check if the status has required templates
                 hasRelevantTemplates = EmailValidationParameter__mdt.getInstance(oldStatus) != null ? EmailValidationParameter__mdt.getInstance(oldStatus).RelevantTemplates__c != '' : false;
                 
-
+                
                 //execute logic only if status has progressed and the status has required templates
                 if(statusChanged && hasRelevantTemplates){
                     List<String> relevantTemplates = EmailValidationParameter__mdt.getInstance(oldStatus).RelevantTemplates__c.split(',');
@@ -57,8 +55,7 @@ public class EmailValidation {
                 //add error if the status has changed and one or more of the required templates are missing
                 if(statusChanged && !emailSent){
                     record.addError(EmailValidationParameter__mdt.getInstance(oldStatus).ErrorMessage__c);
-                }
-            }
+                }            
         }
     }
 }
